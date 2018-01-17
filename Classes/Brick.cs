@@ -14,7 +14,7 @@ namespace arkanoid.Classes
         GraphicsDevice graphics;
         Texture2D pixel;
 
-        public bool active { get; set; } = true;
+        public bool active { get; set; }
 
         int width;
         int height;
@@ -31,23 +31,23 @@ namespace arkanoid.Classes
             this.posX = posX;
             this.posY = posY;
             
+            active = true;
+            
             pixel = new Texture2D(graphics, 1, 1);
             pixel.SetData(new Color[] {Color.White});
         }
 
         public bool CheckBalColision(Ball ball)
         {
-            if (active && ball.PosX >= posX && ball.PosX <= posX + width && ball.PosY <= posY + height && ball.PosY >= posY)
+            if (active && ball.PosX >= posX && ball.PosX <= posX + width && ball.PosY <= posY + height &&
+                ball.PosY >= posY)
             {
-                
                 ball.DirY = -ball.DirY;
                 return true;
-                
             }
+            
             return false;
         }
-
-        
 
 
         public override void Draw(GameTime gameTime)

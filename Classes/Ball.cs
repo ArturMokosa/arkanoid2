@@ -12,7 +12,7 @@ namespace arkanoid.Classes
 {
     class Ball : DrawableGameComponent
     {
-        public bool run { get; set; } = false;
+        public bool run { get; set; }
 
         public int size;
 
@@ -33,6 +33,8 @@ namespace arkanoid.Classes
             this.spriteBatch = spriteBatch;
             this.graphics = graphics;
             this.size = size;
+            
+            run = false;
             
             pixel = new Texture2D(graphics, 1, 1);
             pixel.SetData(new Color[]{Color.White});

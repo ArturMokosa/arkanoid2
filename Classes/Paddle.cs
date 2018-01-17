@@ -43,7 +43,7 @@ namespace arkanoid.Classes
         
         public void ResetPaddlePosition()
         {
-            PosX = graphics.Viewport.Width / 2 - width / 2;
+            PosX = graphics.Viewport.Width - width / 222;
             PosY = graphics.Viewport.Height - 20;
         }
 
@@ -54,8 +54,9 @@ namespace arkanoid.Classes
             if(ball.PosY + ball.size >= PosY && ball.PosX >= PosX && ball.PosX + ball.size <= PosX + width)
             {
                 ball.DirY = -ball.DirY;
-                //ball.DirX = -ball.DirX;
+//                ball.DirX = -ball.DirX;
             }
+            
 
         }
 

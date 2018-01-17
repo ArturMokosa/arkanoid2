@@ -1,11 +1,14 @@
-﻿using System.Xml.Schema;
+﻿using System;
+using System.Xml.Schema;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using arkanoid.Classes;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 
 namespace arkanoid
+
 {
     public class Game1 : Game
     {
@@ -14,11 +17,10 @@ namespace arkanoid
         Ball ball;
         Paddle paddle;
         List<Brick> lstBricks;
-        Texture2D pixel; 
-
+        Texture2D pixel;
 
         int ballSize = 6;
-        int paddleWidth = 40;
+        int paddleWidth = 100;
         int paddleHeight = 10;
         int brickHeight = 20;
         int brickWidth = 50;
@@ -26,6 +28,10 @@ namespace arkanoid
 
         int gameWidth = 500;
         int gameHeight = 600;
+        
+        int counter = 1;
+        int paddleWidth_tmp;
+
 
         public Game1()
         {
@@ -47,7 +53,7 @@ namespace arkanoid
             ball = new Ball(this, GraphicsDevice, spriteBatch, ballSize);
             paddle = new Paddle(this, GraphicsDevice, spriteBatch, paddleWidth, paddleHeight);
             pixel = new Texture2D(GraphicsDevice, 1, 1);
-            pixel.SetData(new Color[] { Color.White });
+            pixel.SetData(new Color[] {Color.White});
             lstBricks = new List<Brick>();
 
             Components.Add(ball);
@@ -61,15 +67,16 @@ namespace arkanoid
             {
                 for (int j = 1; j < brickRows + 1; j++)
                 {
-                    lstBricks.Add(new Brick(this, GraphicsDevice, spriteBatch, brickWidth, brickHeight, i * brickWidth + i,
+                    lstBricks.Add(new Brick(this, GraphicsDevice, spriteBatch, brickWidth, brickHeight,
+                        i * brickWidth + i,
                         j * brickHeight + j));
                 }
             }
 
             foreach (var brick in lstBricks)
             {
-                Components.Add(brick); 
-            } 
+                Components.Add(brick);
+            }
         }
 
         protected override void UnloadContent()
@@ -88,15 +95,34 @@ namespace arkanoid
 
             paddle.CheckPaddleBallCollison(ball);
 
-
             foreach (var item in lstBricks)
             {
                 if (item.CheckBalColision(ball))
                 {
                     item.active = false;
+
+                    if (counter < 4)
+                    {
+                        Components.Remove(paddle);
+                        paddle = new Paddle(this, GraphicsDevice, spriteBatch, paddleWidth -= counter, paddleHeight);
+
+                        paddle.Visible = false;
+                        Components.Add(paddle);
+                        paddle.Visible = true;
+
+                        counter++;
+                        paddleWidth_tmp = paddleWidth;
+                    }
+
+                    else if (counter == 4)
+                    {
+                        Components.Remove(paddle);
+                        paddle = new Paddle(this, GraphicsDevice, spriteBatch, paddleWidth = paddleWidth_tmp, paddleHeight);
+                        Components.Add(paddle);
+                    }
                 }
             }
-            
+
 
             base.Update(gameTime);
         }
@@ -105,7 +131,8 @@ namespace arkanoid
         {
             GraphicsDevice.Clear(new Color(51, 51, 51));
             spriteBatch.Begin();
-            spriteBatch.Draw(pixel, new Rectangle(0,GraphicsDevice.Viewport.Height - 20,GraphicsDevice.Viewport.Width, 1), Color.White);
+            spriteBatch.Draw(pixel,
+                new Rectangle(0, GraphicsDevice.Viewport.Height - 20, GraphicsDevice.Viewport.Width, 1), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
